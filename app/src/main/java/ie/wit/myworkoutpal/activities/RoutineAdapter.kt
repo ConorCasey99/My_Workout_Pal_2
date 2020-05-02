@@ -4,9 +4,12 @@ package ie.wit.myworkoutpal.activities
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ie.wit.myworkoutpal.R
 import ie.wit.myworkoutpal.models.RoutineModel
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.card_routine.view.*
 
 interface RoutineListener {
@@ -14,7 +17,10 @@ interface RoutineListener {
 }
 
 class RoutineAdapter constructor(private var routines: ArrayList<RoutineModel>,
-                                 private val listener: RoutineListener) : RecyclerView.Adapter<RoutineAdapter.MainHolder>() {
+                                 private val listener: RoutineListener, reportall: Boolean)
+    : RecyclerView.Adapter<RoutineAdapter.MainHolder>() {
+
+    val reportAll = reportall
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         return MainHolder(
@@ -28,7 +34,7 @@ class RoutineAdapter constructor(private var routines: ArrayList<RoutineModel>,
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val routine = routines[holder.adapterPosition]
-        holder.bind(routine, listener)
+        holder.bind(routine, listener, reportAll)
     }
 
     override fun getItemCount(): Int = routines.size
@@ -40,12 +46,25 @@ class RoutineAdapter constructor(private var routines: ArrayList<RoutineModel>,
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(routine: RoutineModel,  listener : RoutineListener) {
+        fun bind(routine: RoutineModel,  listener : RoutineListener, reportAll: Boolean) {
             itemView.tag = routine
             itemView.routineTitle.text = routine.routineTitle
             itemView.reps.text = routine.reps
             itemView.sets.text = routine.sets
             itemView.setOnClickListener { listener.onRoutineClick(routine) }
+
+            if(!reportAll)
+                itemView.setOnClickListener { listener.onRoutineClick(routine) }
+
+            if(!routine.profilepic.isEmpty()) {
+                Picasso.get().load(routine.profilepic.toUri())
+                    //.resize(180, 180)
+                    .transform(CropCircleTransformation())
+                    .into(itemView.imageIcon)
+            }
+            else
+                itemView.imageIcon.setImageResource(R.mipmap.ic_launcher)
+
         }
     }
 }

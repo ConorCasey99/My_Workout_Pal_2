@@ -26,7 +26,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 
-class ReportFragment : Fragment(), AnkoLogger,
+open class ReportFragment : Fragment(), AnkoLogger,
     RoutineListener {
 
     lateinit var app: MainApp
@@ -80,7 +80,7 @@ class ReportFragment : Fragment(), AnkoLogger,
             }
     }
 
-    fun setSwipeRefresh() {
+    open fun setSwipeRefresh() {
         root.swiperefresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 root.swiperefresh.isRefreshing = true
@@ -151,7 +151,7 @@ class ReportFragment : Fragment(), AnkoLogger,
 
                         routinesList.add(routine!!)
                         root.recyclerView.adapter =
-                            RoutineAdapter(routinesList, this@ReportFragment)
+                            RoutineAdapter(routinesList, this@ReportFragment, reportall = false)
                         root.recyclerView.adapter?.notifyDataSetChanged()
                         checkSwipeRefresh()
 

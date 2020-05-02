@@ -10,6 +10,7 @@ data class RoutineModel(var uid: String = "",
                         var routineTitle: String = "N/A",
                         var reps: String = "N/A",
                         var sets: String = "N/A",
+                        var profilepic: String = "",
                         var email: String? = "joe@bloggs.com") : Parcelable {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -18,6 +19,7 @@ data class RoutineModel(var uid: String = "",
             "routineTitle" to routineTitle,
             "reps" to reps,
             "sets" to sets,
+            "profilepic" to profilepic,
             "email" to email
         )
     }

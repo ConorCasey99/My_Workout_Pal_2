@@ -26,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.storage.FirebaseStorage
 
 
 class Login : AppCompatActivity(), View.OnClickListener {
@@ -60,6 +61,7 @@ class Login : AppCompatActivity(), View.OnClickListener {
         // [END config_signin]
 
         app.googleSignInClient = GoogleSignIn.getClient(this, gso)
+        app.storage = FirebaseStorage.getInstance().reference
 
         sign_in_button.setSize(SignInButton.SIZE_WIDE)
         sign_in_button.setColorScheme(0)

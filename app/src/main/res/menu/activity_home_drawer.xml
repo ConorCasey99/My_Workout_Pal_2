@@ -13,6 +13,11 @@
             android:icon="@drawable/ic_menu_report_foreground"
             android:title="@string/menu_report" />
         <item
+            android:id="@+id/nav_all_routines"
+            android:icon="@drawable/ic_menu_report_foreground"
+            android:title="@string/menu_report_all" />
+
+        <item
             android:id="@+id/nav_favourites"
             android:icon="@drawable/ic_menu_favorites_foreground"
             android:title="@string/menu_favourites" />

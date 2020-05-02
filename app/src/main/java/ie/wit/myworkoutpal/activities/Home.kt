@@ -9,19 +9,22 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import ie.wit.myworkoutpal.R
 import ie.wit.myworkoutpal.fragments.AboutUsFragment
+import ie.wit.myworkoutpal.fragments.AllRoutinesFragment
 import ie.wit.myworkoutpal.fragments.RoutineFragment
 import ie.wit.myworkoutpal.fragments.ReportFragment
 import ie.wit.myworkoutpal.main.MainApp
+import ie.wit.myworkoutpal.helpers.*
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.home.*
 import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
+import com.squareup.picasso.Callback
 
 class Home : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +54,19 @@ class Home : AppCompatActivity(),
         val fragment = RoutineFragment.newInstance()
         ft.replace(R.id.homeFrame, fragment)
         ft.commit()
+
+        navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
+
+        Picasso.get().load(app.auth.currentUser?.photoUrl)
+            .resize(180, 180)
+            .transform(CropCircleTransformation())
+            .into(navView.getHeaderView(0).imageView, object : Callback {
+                override fun onSuccess() {
+                    // Drawable is ready
+                    uploadImageView(app,navView.getHeaderView(0).imageView)
+                }
+                override fun onError(e: Exception) {}
+            })
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -60,6 +76,8 @@ class Home : AppCompatActivity(),
                 navigateTo(RoutineFragment.newInstance())
             R.id.nav_report ->
                 navigateTo(ReportFragment.newInstance())
+            R.id.nav_all_routines ->
+                navigateTo(AllRoutinesFragment.newInstance())
             R.id.nav_aboutus ->
                 navigateTo(AboutUsFragment.newInstance())
             R.id.nav_sign_out ->
@@ -70,6 +88,8 @@ class Home : AppCompatActivity(),
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
