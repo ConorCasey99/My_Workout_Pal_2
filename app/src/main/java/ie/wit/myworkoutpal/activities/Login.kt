@@ -143,6 +143,7 @@ class Login : AppCompatActivity(), View.OnClickListener {
 
     private fun signOut() {
         app.auth.signOut()
+        app.googleSignInClient.signOut()
         updateUI(null)
     }
 
@@ -209,6 +210,8 @@ class Login : AppCompatActivity(), View.OnClickListener {
 
             verifyEmailButton.isEnabled = !user.isEmailVerified
             app.database = FirebaseDatabase.getInstance().reference
+            app.storage = FirebaseStorage.getInstance().reference
+
             startActivity<Home>()
         } else {
             status.setText(R.string.signed_out)

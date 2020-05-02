@@ -23,9 +23,8 @@ class RoutineFragment : Fragment(), AnkoLogger {
 
     lateinit var app: MainApp
     lateinit var loader : AlertDialog
-    lateinit var eventListener : ValueEventListener
+   // lateinit var eventListener : ValueEventListener
     var routine = RoutineModel()
-    var edit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +79,14 @@ class RoutineFragment : Fragment(), AnkoLogger {
             getAllRoutines(app.auth.currentUser!!.uid)
     }
 */
+    override fun onPause() {
+        super.onPause()
+        if(app.auth.uid != null)
+            app.database.child("user-routines")
+                .child(app.auth.currentUser!!.uid)
+                //.removeEventListener(eventListener)
+    }
+
     fun writeNewRoutine(routine: RoutineModel) {
         // Create new routine at /routines & /routines/$uid
         showLoader(loader, "Adding Routine to Firebase")

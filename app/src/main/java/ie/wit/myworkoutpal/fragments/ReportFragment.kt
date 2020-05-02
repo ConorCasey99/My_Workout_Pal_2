@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 import ie.wit.myworkoutpal.R
@@ -48,6 +49,10 @@ open class ReportFragment : Fragment(), AnkoLogger,
 
         root.recyclerView.setLayoutManager(LinearLayoutManager(activity))
         setSwipeRefresh()
+
+        //var query = FirebaseDatabase.getInstance()
+            //.reference
+            //.child("user-routines").child(app.auth.currentUser?.uid)
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(activity!!) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -129,6 +134,7 @@ open class ReportFragment : Fragment(), AnkoLogger,
 
     override fun onResume() {
         super.onResume()
+        if(this::class == ReportFragment::class)
         getAllRoutines(app.auth.currentUser!!.uid)
     }
 

@@ -51,7 +51,6 @@ class RoutineAdapter constructor(private var routines: ArrayList<RoutineModel>,
             itemView.routineTitle.text = routine.routineTitle
             itemView.reps.text = routine.reps
             itemView.sets.text = routine.sets
-            itemView.setOnClickListener { listener.onRoutineClick(routine) }
 
             if(!reportAll)
                 itemView.setOnClickListener { listener.onRoutineClick(routine) }

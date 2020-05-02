@@ -1,6 +1,7 @@
 package ie.wit.myworkoutpal.activities
 
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -49,6 +50,12 @@ class Home : AppCompatActivity(),
 
         navView.getHeaderView(0).nav_header_email.text = app.auth.currentUser?.email
 
+        //Checking if Google User, upload google profile pic
+        checkExistingPhoto(app,this)
+
+        navView.getHeaderView(0).imageView
+            .setOnClickListener { showImagePicker(this,1) }
+
         ft = supportFragmentManager.beginTransaction()
 
         val fragment = RoutineFragment.newInstance()
@@ -56,7 +63,7 @@ class Home : AppCompatActivity(),
         ft.commit()
 
         navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
-
+/*
         Picasso.get().load(app.auth.currentUser?.photoUrl)
             .resize(180, 180)
             .transform(CropCircleTransformation())
@@ -67,6 +74,23 @@ class Home : AppCompatActivity(),
                 }
                 override fun onError(e: Exception) {}
             })
+
+        //Checking if Google User, upload google profile pic
+        if (app.auth.currentUser?.photoUrl != null) {
+            navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
+            Picasso.get().load(app.auth.currentUser?.photoUrl)
+                .resize(180, 180)
+                .transform(CropCircleTransformation())
+                .into(navView.getHeaderView(0).imageView, object : Callback {
+                    override fun onSuccess() {
+                        // Drawable is ready
+                        uploadImageView(app,navView.getHeaderView(0).imageView)
+                    }
+                    override fun onError(e: Exception) {}
+                })
+        }
+        else // Regular User, upload default pic of homer
+            uploadImageView(app,navView.getHeaderView(0).imageView)*/
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -88,8 +112,6 @@ class Home : AppCompatActivity(),
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
-
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
@@ -119,10 +141,32 @@ class Home : AppCompatActivity(),
             .commit()
     }
 
-    private fun signOut()
-    {
-        app.auth.signOut()
-        startActivity<Login>()
-        finish()
+    private fun signOut() {
+        app.googleSignInClient.signOut().addOnCompleteListener(this) {
+            app.auth.signOut()
+            startActivity<Login>()
+            finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            1 -> {
+                if (data != null) {
+                    writeImageRef(app,readImageUri(resultCode, data).toString())
+                    Picasso.get().load(readImageUri(resultCode, data).toString())
+                        .resize(180, 180)
+                        .transform(CropCircleTransformation())
+                        .into(navView.getHeaderView(0).imageView, object : Callback {
+                            override fun onSuccess() {
+                                // Drawable is ready
+                                uploadImageView(app,navView.getHeaderView(0).imageView)
+                            }
+                            override fun onError(e: Exception) {}
+                        })
+                }
+            }
+        }
     }
 }

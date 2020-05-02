@@ -58,47 +58,46 @@ fun hideLoader(loader: AlertDialog) {
         loader.dismiss()
 }
 
-    fun convertImageToBytes(imageView: ImageView): ByteArray {
-        // Get the data from an ImageView as bytes
-        lateinit var bitmap: Bitmap
+fun convertImageToBytes(imageView: ImageView) : ByteArray {
+    // Get the data from an ImageView as bytes
+    lateinit var bitmap: Bitmap
 
-        if (imageView is AdaptiveIconDrawable || imageView is AppCompatImageView)
-            bitmap = imageView.drawable.toBitmap()
-        else
-            bitmap = (imageView.drawable as BitmapDrawable).toBitmap()
+    if(imageView is AdaptiveIconDrawable || imageView is AppCompatImageView)
+        bitmap = imageView.drawable.toBitmap()
+    else
+        bitmap = (imageView.drawable as BitmapDrawable).toBitmap()
 
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        return baos.toByteArray()
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    return baos.toByteArray()
+}
+
+fun uploadImageView(app: MainApp, imageView: ImageView) {
+    val uid = app.auth.currentUser!!.uid
+    val imageRef = app.storage.child("photos").child("${uid}.jpg")
+    val uploadTask = imageRef.putBytes(convertImageToBytes(imageView))
+
+    uploadTask.addOnFailureListener { object : OnFailureListener {
+        override fun onFailure(error: Exception) {
+            Log.v("Routine", "uploadTask.exception" + error)
+        }
     }
-
-    fun uploadImageView(app: MainApp, imageView: ImageView) {
-        val uid = app.auth.currentUser!!.uid
-        val imageRef = app.storage.child("photos").child("${uid}.jpg")
-        val uploadTask = imageRef.putBytes(convertImageToBytes(imageView))
-
-        uploadTask.addOnFailureListener {
-            object : OnFailureListener {
-                override fun onFailure(error: Exception) {
-                    Log.v("Routine", "uploadTask.exception" + error)
-                }
-            }
-        }.addOnSuccessListener {
-            uploadTask.continueWithTask { task ->
-                imageRef.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    app.userImage = task.result!!.toString().toUri()
-                    updateAllRoutines(app)
-                    writeImageRef(app, app.userImage.toString())
-                    Picasso.get().load(app.userImage)
-                        .resize(180, 180)
-                        .transform(CropCircleTransformation())
-                        .into(imageView)
-                }
+    }.addOnSuccessListener {
+        uploadTask.continueWithTask { task ->
+            imageRef.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                app.userImage = task.result!!.toString().toUri()
+                updateAllRoutines(app)
+                writeImageRef(app,app.userImage.toString())
+                Picasso.get().load(app.userImage)
+                    .resize(180, 180)
+                    .transform(CropCircleTransformation())
+                    .into(imageView)
             }
         }
     }
+}
 
     fun showImagePicker(parent: Activity, id: Int) {
         val intent = Intent()
@@ -204,6 +203,7 @@ fun hideLoader(loader: AlertDialog) {
     fun checkExistingPhoto(app: MainApp, activity: Activity) {
 
         app.userImage = "".toUri()
+        Log.v("Routine","checkExistingPhoto 1 app.userImage : ${app.userImage}")
 
         app.database.child("user-photos").orderByChild("uid")
             .equalTo(app.auth.currentUser!!.uid)
