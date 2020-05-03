@@ -100,7 +100,7 @@ fun setMapMarker(app: MainApp) {
 fun getAllRoutines(app: MainApp) {
     val routinesList = ArrayList<RoutineModel>()
 
-    app.database.child("user-routines").child(app.auth.currentUser!!.uid)
+    app.database.child("user-routines").child(app.currentUser!!.uid)
         .addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {}
 
@@ -121,7 +121,7 @@ fun getAllRoutines(app: MainApp) {
 fun getFavouriteRoutines(app: MainApp) {
     val routinesList = ArrayList<RoutineModel>()
 
-    app.database.child("user-routines").child(app.auth.currentUser!!.uid)
+    app.database.child("user-routines").child(app.currentUser!!.uid)
         .orderByChild("isfavourite")
         .equalTo(true)
         .addValueEventListener(object : ValueEventListener {

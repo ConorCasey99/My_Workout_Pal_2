@@ -55,7 +55,7 @@ class EditRoutineFragment : Fragment(), AnkoLogger {
             showLoader(loader, "Updating Routine on Server...")
             updateRoutineData()
             updateRoutine(editRoutine!!.uid, editRoutine!!)
-            updateUserRoutine(app.auth.currentUser!!.uid,
+            updateUserRoutine(app.currentUser!!.uid,
                 editRoutine!!.uid, editRoutine!!)
         }
 

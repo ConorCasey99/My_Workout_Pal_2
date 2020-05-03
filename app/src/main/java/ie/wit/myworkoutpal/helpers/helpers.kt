@@ -73,7 +73,7 @@ fun convertImageToBytes(imageView: ImageView) : ByteArray {
 }
 
 fun uploadImageView(app: MainApp, imageView: ImageView) {
-    val uid = app.auth.currentUser!!.uid
+    val uid = app.currentUser!!.uid
     val imageRef = app.storage.child("photos").child("${uid}.jpg")
     val uploadTask = imageRef.putBytes(convertImageToBytes(imageView))
 
@@ -121,7 +121,7 @@ fun uploadImageView(app: MainApp, imageView: ImageView) {
     }
 
     fun writeImageRef(app: MainApp, imageRef: String) {
-        val userId = app.auth.currentUser!!.uid
+        val userId = app.currentUser!!.uid
         val values = UserPhotoModel(userId, imageRef).toMap()
         val childUpdates = HashMap<String, Any>()
 
@@ -130,8 +130,8 @@ fun uploadImageView(app: MainApp, imageView: ImageView) {
     }
 
     fun updateAllRoutines(app: MainApp) {
-        val userId = app.auth.currentUser!!.uid
-        val userEmail = app.auth.currentUser!!.email
+        val userId = app.currentUser!!.uid
+        val userEmail = app.currentUser!!.email
         var routineRef = app.database.ref.child("routines")
             .orderByChild("email")
         val userRoutineRef = app.database.ref.child("user-routines")
@@ -166,18 +166,18 @@ fun uploadImageView(app: MainApp, imageView: ImageView) {
 
         var imageUri: Uri? = null
         val imageExists = app.userImage.toString().length > 0
-        val googlePhotoExists = app.auth.currentUser?.photoUrl != null
+        val googlePhotoExists = app.currentUser?.photoUrl != null
 
         if (imageExists)
             imageUri = app.userImage
         else
             if (googlePhotoExists)
-                imageUri = app.auth.currentUser?.photoUrl!!
+                imageUri = app.currentUser?.photoUrl!!
 
         if (googlePhotoExists || imageExists) {
-            if (!app.auth.currentUser?.displayName.isNullOrEmpty())
+            if (!app.currentUser?.displayName.isNullOrEmpty())
                 activity.navView.getHeaderView(0)
-                    .nav_header.text = app.auth.currentUser?.displayName
+                    .nav_header.text = app.currentUser?.displayName
             else
                 activity.navView.getHeaderView(0)
                     .nav_header.text = activity.getText(R.string.nav_header_title)
@@ -206,7 +206,7 @@ fun uploadImageView(app: MainApp, imageView: ImageView) {
         Log.v("Routine","checkExistingPhoto 1 app.userImage : ${app.userImage}")
 
         app.database.child("user-photos").orderByChild("uid")
-            .equalTo(app.auth.currentUser!!.uid)
+            .equalTo(app.currentUser!!.uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {

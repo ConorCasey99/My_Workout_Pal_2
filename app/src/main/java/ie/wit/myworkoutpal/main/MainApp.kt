@@ -18,7 +18,6 @@ import org.jetbrains.anko.info
 class MainApp : Application(), AnkoLogger {
 
     lateinit var currentUser: FirebaseUser
-    lateinit var auth: FirebaseAuth
     lateinit var database: DatabaseReference
     lateinit var googleSignInClient: GoogleSignInClient
     lateinit var storage: StorageReference

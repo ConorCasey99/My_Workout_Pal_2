@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
@@ -48,11 +49,11 @@ class Home : AppCompatActivity(),
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        navView.getHeaderView(0).nav_header_email.text = app.auth.currentUser?.email
+        navView.getHeaderView(0).nav_header_email.text = app.currentUser?.email
 
-        if (app.auth.currentUser?.photoUrl != null) {
-            navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
-            Picasso.get().load(app.auth.currentUser?.photoUrl)
+        if (app.currentUser?.photoUrl != null) {
+            navView.getHeaderView(0).nav_header.text = app.currentUser?.displayName
+            Picasso.get().load(app.currentUser?.photoUrl)
                 .resize(180, 180)
                 .transform(CropCircleTransformation())
                 .into(navView.getHeaderView(0).imageView)
@@ -82,7 +83,7 @@ class Home : AppCompatActivity(),
         ft.replace(R.id.homeFrame, fragment)
         ft.commit()
 
-        navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
+        navView.getHeaderView(0).nav_header.text = app.currentUser?.displayName
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -150,11 +151,10 @@ class Home : AppCompatActivity(),
     }
 
     private fun signOut() {
-        app.googleSignInClient.signOut().addOnCompleteListener(this) {
-            app.auth.signOut()
-            startActivity<Login>()
-            finish()
-        }
+        AuthUI.getInstance()
+            .signOut(this)
+            .addOnCompleteListener { startActivity<Login>() }
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

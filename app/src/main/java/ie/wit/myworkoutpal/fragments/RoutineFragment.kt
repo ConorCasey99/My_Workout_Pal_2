@@ -23,7 +23,6 @@ class RoutineFragment : Fragment(), AnkoLogger {
 
     lateinit var app: MainApp
     lateinit var loader : AlertDialog
-   // lateinit var eventListener : ValueEventListener
     var routine = RoutineModel()
     var favourite = false
 
@@ -38,12 +37,12 @@ class RoutineFragment : Fragment(), AnkoLogger {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_routine, container, false)
-        loader = createLoader(activity!!)
+        loader = createLoader(requireActivity())
         activity?.title = getString(R.string.action_routine)
 
         setButtonListener(root)
         setFavouriteListener(root)
-        return root;
+        return root
     }
 
     fun setFavouriteListener (layout: View) {
@@ -87,31 +86,17 @@ class RoutineFragment : Fragment(), AnkoLogger {
                         isfavourite = favourite,
                         latitude = app.currentLocation.latitude,
                         longitude = app.currentLocation.longitude,
-                        email = app.auth.currentUser?.email))
+                        email = app.currentUser?.email))
                 }
             }
 
         }
-/*
-    override fun onResume() {
-        super.onResume()
-        if(this::class == ReportFragment::class)
-            getAllRoutines(app.auth.currentUser!!.uid)
-    }
-*/
-    override fun onPause() {
-        super.onPause()
-        if(app.auth.uid != null)
-            app.database.child("user-routines")
-                .child(app.auth.currentUser!!.uid)
-                //.removeEventListener(eventListener)
-    }
 
     fun writeNewRoutine(routine: RoutineModel) {
         // Create new routine at /routines & /routines/$uid
         showLoader(loader, "Adding Routine to Firebase")
         info("Firebase DB Reference : ${app.database}")
-        val uid = app.auth.currentUser!!.uid
+        val uid = app.currentUser!!.uid
         val key = app.database.child("routines").push().key
         if (key == null) {
             info("Firebase Error : Key Empty")

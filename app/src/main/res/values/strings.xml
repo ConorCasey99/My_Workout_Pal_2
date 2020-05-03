@@ -54,7 +54,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_routine">New Routine</string>
-    <string name="action_report">Report</string>
+    <string name="action_report">Your Routines</string>
     <string name="action_edit">Edit Routine</string>
 
     <string name="menu_report_all">All Routines</string>
@@ -62,5 +62,9 @@
     <string name="select_profile_image">Select Profile Image</string>
 
     <string name="favourites_title">Favourite Routines</string>
+
+    <string name="sign_in_google">Sign In with Google</string>
+    <string name="sign_in_email">Sign In with Email</string>
+    <string name="sign_in_phone">Sign In with Phone</string>
 
 </resources>

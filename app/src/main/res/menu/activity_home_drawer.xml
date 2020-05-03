@@ -10,11 +10,11 @@
             android:title="@string/menu_routine" />
         <item
             android:id="@+id/nav_report"
-            android:icon="@drawable/ic_menu_report_foreground"
+            android:icon="@drawable/ic_your_routines"
             android:title="@string/menu_report" />
         <item
             android:id="@+id/nav_all_routines"
-            android:icon="@drawable/ic_menu_report_foreground"
+            android:icon="@drawable/ic_all_user_routines"
             android:title="@string/menu_report_all" />
 
         <item
@@ -26,19 +26,6 @@
             android:icon="@drawable/ic_menu_aboutus_foreground"
             android:title="@string/menu_about" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share_foreground"
-                android:title="@string/menu_share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send_foreground"
-                android:title="@string/menu_send" />
-        </menu>
-    </item>
 
     <item android:title="Access Control">
         <menu>

@@ -59,7 +59,7 @@ open class ReportFragment : Fragment(), AnkoLogger,
                 val adapter = root.recyclerView.adapter as RoutineAdapter
                 adapter.removeAt(viewHolder.adapterPosition)
                 deleteRoutine((viewHolder.itemView.tag as RoutineModel).uid)
-                deleteUserRoutine(app.auth.currentUser!!.uid,
+                deleteUserRoutine(app.currentUser!!.uid,
                     (viewHolder.itemView.tag as RoutineModel).uid)
             }
         }
@@ -89,7 +89,7 @@ open class ReportFragment : Fragment(), AnkoLogger,
         root.swiperefresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 root.swiperefresh.isRefreshing = true
-                getAllRoutines(app.auth.currentUser!!.uid)
+                getAllRoutines(app.currentUser!!.uid)
             }
         })
     }
@@ -135,7 +135,7 @@ open class ReportFragment : Fragment(), AnkoLogger,
     override fun onResume() {
         super.onResume()
         if(this::class == ReportFragment::class)
-        getAllRoutines(app.auth.currentUser!!.uid)
+        getAllRoutines(app.currentUser!!.uid)
     }
 
     fun getAllRoutines(userId: String?) {

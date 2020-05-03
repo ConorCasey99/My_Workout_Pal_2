@@ -46,5 +46,14 @@
         <item name="android:textSize">30sp</item>
     </style>
 
+    <style name="FirebaseLoginTheme" parent="FirebaseUI">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+        <item name="android:colorBackground">@color/colorWhite</item>
+        <item name="android:textColorHint">@color/colorWhite</item>
+        <item name="android:textColorPrimary">@color/colorBlack</item>
+    </style>
+
 
 </resources>
