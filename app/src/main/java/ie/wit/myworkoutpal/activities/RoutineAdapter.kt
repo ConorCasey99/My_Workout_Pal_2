@@ -32,6 +32,8 @@ class RoutineAdapter constructor(private var routines: ArrayList<RoutineModel>,
         )
     }
 
+
+
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val routine = routines[holder.adapterPosition]
         holder.bind(routine, listener, reportAll)

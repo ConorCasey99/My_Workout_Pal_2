@@ -25,6 +25,7 @@ class RoutineFragment : Fragment(), AnkoLogger {
     lateinit var loader : AlertDialog
    // lateinit var eventListener : ValueEventListener
     var routine = RoutineModel()
+    var favourite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,23 @@ class RoutineFragment : Fragment(), AnkoLogger {
         activity?.title = getString(R.string.action_routine)
 
         setButtonListener(root)
+        setFavouriteListener(root)
         return root;
+    }
+
+    fun setFavouriteListener (layout: View) {
+        layout.imageFavourite.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view: View?) {
+                if (!favourite) {
+                    layout.imageFavourite.setImageResource(android.R.drawable.star_big_on)
+                    favourite = true
+                }
+                else {
+                    layout.imageFavourite.setImageResource(android.R.drawable.star_big_off)
+                    favourite = false
+                }
+            }
+        })
     }
 
     companion object {
@@ -67,6 +84,9 @@ class RoutineFragment : Fragment(), AnkoLogger {
                         reps = repsVal,
                         sets = setsVal,
                         profilepic = app.userImage.toString(),
+                        isfavourite = favourite,
+                        latitude = app.currentLocation.latitude,
+                        longitude = app.currentLocation.longitude,
                         email = app.auth.currentUser?.email))
                 }
             }

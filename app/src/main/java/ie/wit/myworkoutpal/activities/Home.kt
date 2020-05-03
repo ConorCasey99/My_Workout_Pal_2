@@ -2,21 +2,20 @@ package ie.wit.myworkoutpal.activities
 
 
 import android.content.Intent
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import ie.wit.myworkoutpal.R
-import ie.wit.myworkoutpal.fragments.AboutUsFragment
-import ie.wit.myworkoutpal.fragments.AllRoutinesFragment
-import ie.wit.myworkoutpal.fragments.RoutineFragment
-import ie.wit.myworkoutpal.fragments.ReportFragment
 import ie.wit.myworkoutpal.main.MainApp
 import ie.wit.myworkoutpal.helpers.*
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
@@ -26,6 +25,7 @@ import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import com.squareup.picasso.Callback
+import ie.wit.myworkoutpal.fragments.*
 
 class Home : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +50,26 @@ class Home : AppCompatActivity(),
 
         navView.getHeaderView(0).nav_header_email.text = app.auth.currentUser?.email
 
+        if (app.auth.currentUser?.photoUrl != null) {
+            navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
+            Picasso.get().load(app.auth.currentUser?.photoUrl)
+                .resize(180, 180)
+                .transform(CropCircleTransformation())
+                .into(navView.getHeaderView(0).imageView)
+        }
+
+        app.currentLocation = Location("Default").apply {
+            latitude = 52.245696
+            longitude = -7.139102
+        }
+
+        app.locationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        if(checkLocationPermissions(this)) {
+            // todo get the current location
+            setCurrentLocation(app)
+        }
+
         //Checking if Google User, upload google profile pic
         checkExistingPhoto(app,this)
 
@@ -63,34 +83,6 @@ class Home : AppCompatActivity(),
         ft.commit()
 
         navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
-/*
-        Picasso.get().load(app.auth.currentUser?.photoUrl)
-            .resize(180, 180)
-            .transform(CropCircleTransformation())
-            .into(navView.getHeaderView(0).imageView, object : Callback {
-                override fun onSuccess() {
-                    // Drawable is ready
-                    uploadImageView(app,navView.getHeaderView(0).imageView)
-                }
-                override fun onError(e: Exception) {}
-            })
-
-        //Checking if Google User, upload google profile pic
-        if (app.auth.currentUser?.photoUrl != null) {
-            navView.getHeaderView(0).nav_header.text = app.auth.currentUser?.displayName
-            Picasso.get().load(app.auth.currentUser?.photoUrl)
-                .resize(180, 180)
-                .transform(CropCircleTransformation())
-                .into(navView.getHeaderView(0).imageView, object : Callback {
-                    override fun onSuccess() {
-                        // Drawable is ready
-                        uploadImageView(app,navView.getHeaderView(0).imageView)
-                    }
-                    override fun onError(e: Exception) {}
-                })
-        }
-        else // Regular User, upload default pic of homer
-            uploadImageView(app,navView.getHeaderView(0).imageView)*/
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -104,6 +96,8 @@ class Home : AppCompatActivity(),
                 navigateTo(AllRoutinesFragment.newInstance())
             R.id.nav_aboutus ->
                 navigateTo(AboutUsFragment.newInstance())
+            R.id.nav_favourites ->
+                navigateTo(FavouritesFragment.newInstance())
             R.id.nav_sign_out ->
                 signOut()
 
@@ -125,6 +119,20 @@ class Home : AppCompatActivity(),
             R.id.action_report -> toast("You Selected Report")
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (isPermissionGranted(requestCode, grantResults)) {
+            // todo get the current location
+            setCurrentLocation(app)
+        } else {
+            // permissions denied, so use the default location
+            app.currentLocation = Location("Default").apply {
+                latitude = 52.245696
+                longitude = -7.139102
+            }
+        }
+        Log.v("Routine", "Home LAT: ${app.currentLocation.latitude} LNG: ${app.currentLocation.longitude}")
     }
 
     override fun onBackPressed() {

@@ -11,6 +11,9 @@ data class RoutineModel(var uid: String = "",
                         var reps: String = "N/A",
                         var sets: String = "N/A",
                         var profilepic: String = "",
+                        var isfavourite: Boolean = false,
+                        var latitude: Double = 0.0,
+                        var longitude: Double = 0.0,
                         var email: String? = "joe@bloggs.com") : Parcelable {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -20,6 +23,9 @@ data class RoutineModel(var uid: String = "",
             "reps" to reps,
             "sets" to sets,
             "profilepic" to profilepic,
+            "isfavourite" to isfavourite,
+            "latitude" to latitude,
+            "longitude" to longitude,
             "email" to email
         )
     }
