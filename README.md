@@ -1,6 +1,8 @@
 # My Workout Pal
 
-My Workout Pal is an android app that lets your track workouts.
+My Workout Pal is an android app that lets you track your workouts and share them.
+Uses google firebase and google authentication for persistence and authentication.
+Written in kotlin using android studio.
 
 ## Details
 Student Name: ConorCasey.<br>
